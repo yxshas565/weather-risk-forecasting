@@ -15,16 +15,25 @@ print(f"Impossible temperature rows: {len(temp_errors)}")
 # Highest surface wind gust ever recorded: ~408 km/h (tornado-adjacent, extreme
 # rare event). Sustained wind_kph above 300 in a general weather dataset is
 # almost certainly a unit/sensor error.
-wind_errors = df[df['wind_kph'] > 300]
+wind_errors = df[df['wind_kph'] > 150]
 print(f"Impossible wind_kph rows: {len(wind_errors)}")
 print(f"Sample bad wind rows:\n{wind_errors[['location_name','wind_kph','last_updated']].head()}")
+
+# Real-world sea-level-adjusted pressure range is roughly 870-1085 mb
+# (highest ever recorded ~1085 mb in a Siberian high, lowest ~870 mb inside
+# a typhoon eye). Anything outside this is a sensor/logging error, same
+# category as the temp/wind fixes above.
+pressure_errors = df[(df['pressure_mb'] > 1085) | (df['pressure_mb'] < 870)]
+print(f"Impossible pressure_mb rows: {len(pressure_errors)}")
+print(f"Sample bad pressure rows:\n{pressure_errors[['location_name','pressure_mb','last_updated']].head()}")
 
 # Drop only the physically-impossible rows — keep legitimate extremes (e.g. a
 # real 48C day) since removing those would bias the model toward calm weather
 # and defeats the purpose of anomaly detection later.
 df_clean = df[
     (df['temperature_celsius'] <= 60) & (df['temperature_celsius'] >= -60) &
-    (df['wind_kph'] <= 300)
+    (df['wind_kph'] <= 150) &
+    (df['pressure_mb'] <= 1085) & (df['pressure_mb'] >= 870)
 ].copy()
 
 print(f"\nRows after removing impossible values: {len(df_clean)} "

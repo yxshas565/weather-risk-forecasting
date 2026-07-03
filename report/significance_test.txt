@@ -1,0 +1,5 @@
+Model MAE: 1.7771
+Naive MAE: 1.9641
+Wilcoxon statistic: 104520665.5
+p-value: 9.96e-84
+Verdict: HIGHLY SIGNIFICANT (p < 0.001) — the improvement is real, not noise.

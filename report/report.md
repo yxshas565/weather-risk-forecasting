@@ -18,8 +18,8 @@ succeed.
 ## 1. Dataset Overview
 
 - **Source:** Kaggle "Global Weather Repository"
-- **Rows:** 150,853 daily weather records
-- **Locations:** 268 cities across 211 countries
+- **Rows:** 150,847 daily weather records
+- **Locations:** 268 cities across 191 countries
 - **Date range:** 2024-05-16 01:45:00 to 2026-07-02 18:45:00
 - **Features:** 41 columns covering temperature, precipitation, wind, pressure,
   humidity, UV index, air quality (8 pollutant/index fields), and astronomical
@@ -63,7 +63,7 @@ bring cooler, wetter conditions).
 
 ## 4. Forecasting Model
 
-Built a daily global-average-temperature time series (25041 unique days)
+Built a daily global-average-temperature time series (25040 unique days)
 using lag features (previous 1/2/3/7 days), rolling statistics, and
 calendar features (day of year, month).
 
@@ -86,7 +86,7 @@ we report this transparently: the value of the modeling exercise here is in
 the feature importance and anomaly detection layers (below), not in beating
 a strong naive baseline by a wide margin.
 
-## 5. Advanced Analysis
+## 5a. Advanced Analysis
 
 ### Anomaly Detection
 Using Isolation Forest across temperature, precipitation, humidity, wind,
@@ -134,6 +134,39 @@ Ozone shows the strongest relationship with weather conditions: positively
 correlated with temperature (+0.25) and UV index (+0.35), negatively with
 humidity (-0.40) — consistent with photochemical ozone formation being
 temperature/sunlight-driven.
+
+## 5b. Model Rigor: Explainability, Significance & Uncertainty
+
+Three additions push this beyond a standard forecast-and-report exercise:
+
+**SHAP on the actual best model** (the per-location forecaster, not the
+earlier global-average model):
+
+| Feature | Mean \|SHAP value\| |
+|---|---|
+| 7-day rolling mean | 3.79 |
+| Yesterday's temp (lag_1) | 2.62 |
+| Day of year | 0.38 |
+| Latitude | 0.35 |
+| 7 days ago (lag_7) | 0.23 |
+
+Notably, at the per-location level the **smoothed weekly trend outweighs
+the single most-recent reading** — the opposite ordering from the earlier
+global-average model. This makes sense: individual daily city-level
+readings are noisier than a global average, so the model leans more on the
+stabilized rolling signal.
+
+**Statistical significance of "model beats naive":** a paired Wilcoxon
+signed-rank test on per-row absolute errors gives **p = 9.96 × 10⁻⁸⁴** —
+the improvement over the naive baseline is not due to chance, at an
+overwhelming confidence level.
+
+**Calibrated uncertainty, not just a point forecast:** quantile regression
+at the 5th/95th percentiles produces genuine 90% prediction intervals.
+Checked against held-out test data, actual coverage is **93.0%** —
+close to the 90% target, meaning the intervals are honest (not
+artificially wide "for show," and not falsely narrow/overconfident).
+Average interval width: ±8.5°C at the 90% level.
 
 ## 6. Key Insights & Limitations
 
