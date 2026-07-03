@@ -145,6 +145,82 @@ div[data-baseweb="select"] > div {
     transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1) !important;
 }
 div[data-baseweb="popover"] { transition: opacity 0.25s ease !important; }
+/* ============================================
+   RESPONSIVE — Tablet & Mobile (Streamlit)
+   ============================================ */
+@media (max-width: 900px) {
+    .hero-title {
+        font-size: 2.2rem;
+    }
+    .hero-subtitle {
+        font-size: 0.8rem;
+    }
+    .pm-banner {
+        padding: 14px 16px;
+        font-size: 0.85rem;
+    }
+    div[data-testid="stMetric"] {
+        padding: 12px 14px 6px 14px;
+    }
+    div[data-testid="stMetricValue"] {
+        font-size: 1.3rem !important;
+    }
+    .stTabs [data-baseweb="tab"] {
+        padding: 8px 12px;
+        font-size: 0.85rem;
+    }
+}
+
+@media (max-width: 600px) {
+    .hero-title {
+        font-size: 1.6rem;
+    }
+    .hero-subtitle {
+        font-size: 0.7rem;
+        letter-spacing: 0.03em;
+    }
+    .pm-banner {
+        padding: 12px 14px;
+        font-size: 0.8rem;
+        border-radius: 12px;
+    }
+    div[data-testid="stMetric"] {
+        padding: 10px 12px 6px 12px;
+        border-radius: 10px;
+    }
+    div[data-testid="stMetricValue"] {
+        font-size: 1.1rem !important;
+    }
+    div[data-testid="stMetricLabel"] {
+        font-size: 0.72rem !important;
+    }
+    .stTabs [data-baseweb="tab-list"] {
+        gap: 3px;
+        flex-wrap: wrap;
+    }
+    .stTabs [data-baseweb="tab"] {
+        padding: 6px 10px;
+        font-size: 0.78rem;
+    }
+    h2::after, h3::after {
+        width: 40px;
+        height: 2px;
+    }
+    .footer-text {
+        font-size: 0.68rem;
+    }
+}
+
+/* Force Streamlit's built-in columns to stack on narrow screens
+   (usually automatic, but reinforced here in case a custom layout resists it) */
+@media (max-width: 640px) {
+    div[data-testid="stHorizontalBlock"] {
+        flex-direction: column !important;
+    }
+    div[data-testid="stHorizontalBlock"] > div {
+        width: 100% !important;
+    }
+}
 </style>
 """, unsafe_allow_html=True)
 
